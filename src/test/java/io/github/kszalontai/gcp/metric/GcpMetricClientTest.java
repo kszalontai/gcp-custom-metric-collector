@@ -1,8 +1,14 @@
 package io.github.kszalontai.gcp.metric;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.*;
 
 import org.junit.Test;
+import org.mockito.Answers;
+
+import com.google.cloud.monitoring.v3.MetricServiceClient;
+import com.google.cloud.monitoring.v3.stub.MetricServiceStub;
+import com.google.monitoring.v3.TimeSeries;
 
 public class GcpMetricClientTest {
 
@@ -23,6 +29,18 @@ public class GcpMetricClientTest {
                 .build();
     }
 
+    @Test
+    public void assert_send_custom_metric_calls_client() {
+        CustomMetric metric = mock(CustomMetric.class);
+        when(metric.timeSeries()).thenReturn(TimeSeries.newBuilder().build());
+        MetricServiceStub mockStub = mock(MetricServiceStub.class, Answers.RETURNS_MOCKS);
+        MetricServiceClient serviceClient = MetricServiceClient.create(mockStub);
+        GcpMetricClient client = new GcpMetricClient(PROJECT_ID, serviceClient);
 
+        client.sendMetric(metric);
+
+        verify(metric).timeSeries();
+        verify(mockStub).createTimeSeriesCallable();
+    }
 
 }
