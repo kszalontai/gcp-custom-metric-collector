@@ -1,9 +1,10 @@
 package io.github.kszalontai.gcp.metric;
 
+import static java.util.Objects.requireNonNull;
+
 import java.io.IOException;
 
 import com.google.cloud.monitoring.v3.MetricServiceClient;
-import com.google.common.base.Preconditions;
 import com.google.monitoring.v3.ProjectName;
 
 public final class GcpMetricClient implements AutoCloseable {
@@ -12,7 +13,7 @@ public final class GcpMetricClient implements AutoCloseable {
     private final MetricServiceClient metricServiceClient;
 
     private GcpMetricClient(Builder builder) {
-        Preconditions.checkNotNull(builder.projectId, "projectId is required");
+        requireNonNull(builder.projectId, "projectId is required");
         this.project = ProjectName.of(builder.projectId);
         try {
             this.metricServiceClient = MetricServiceClient.create();

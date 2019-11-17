@@ -1,6 +1,7 @@
 package io.github.kszalontai.gcp.metric.value;
 
-import com.google.common.base.Preconditions;
+import static java.util.Objects.requireNonNull;
+
 import com.google.monitoring.v3.TypedValue;
 
 public final class BoolValue implements Value {
@@ -11,7 +12,7 @@ public final class BoolValue implements Value {
     private final Boolean value;
 
     private BoolValue(Boolean value) {
-        Preconditions.checkNotNull(value, "value is required");
+        requireNonNull(value, "value is required");
         this.value = value;
     }
 

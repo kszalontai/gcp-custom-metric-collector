@@ -1,6 +1,6 @@
 package io.github.kszalontai.gcp.metric;
 
-import com.google.common.base.Preconditions;
+import static java.util.Objects.requireNonNull;
 
 public final class Label {
 
@@ -8,8 +8,8 @@ public final class Label {
     private final String value;
 
     private Label(String key, String value) {
-        Preconditions.checkNotNull(key, "key is required");
-        Preconditions.checkNotNull(value, "value is required");
+        requireNonNull(key, "key is required");
+        requireNonNull(value, "value is required");
         this.key = key;
         this.value = value;
     }
