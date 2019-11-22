@@ -4,7 +4,7 @@ import com.google.monitoring.v3.TimeSeries;
 
 public interface CustomMetric {
 
-    String CUSTOM_METRIC_PREFIX = "custom.googleapis.com/";
+  String CUSTOM_METRIC_PREFIX = "custom.googleapis.com/";
 
-    TimeSeries timeSeries();
+  TimeSeries timeSeries();
 }

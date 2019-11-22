@@ -1,6 +1,24 @@
 
 plugins {
     id 'java-library'
+    id 'checkstyle'
+    id 'pmd'
+    id 'com.github.spotbugs' version '2.0.1'
+    id 'jacoco'
+}
+
+group = "com.github.kszalontai"
+version = '0.1.0'
+description = "GCP custom metric collector"
+
+apply from: rootProject.file("gradle/code-quality.gradle")
+
+tasks.withType(com.github.spotbugs.SpotBugsTask) {
+    excludeFilter = rootProject.file("config/spotbugs/excludeFilter.xml")
+    reports {
+        xml.enabled = false
+        html.enabled = true
+    }
 }
 
 repositories {
@@ -8,7 +26,6 @@ repositories {
 }
 
 dependencies {
-    // This dependency is used internally, and not exposed to consumers on their own compile classpath.
     implementation 'com.google.cloud:google-cloud-monitoring:1.98.0'
 
     testImplementation 'junit:junit:4.12'
@@ -22,4 +39,6 @@ jar {
     }
 }
 
-version = '0.1.0'
+wrapper {
+    gradleVersion = "5.6.4"
+}
