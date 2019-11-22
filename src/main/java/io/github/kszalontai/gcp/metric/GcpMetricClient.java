@@ -3,6 +3,8 @@ package io.github.kszalontai.gcp.metric;
 import static java.util.Objects.requireNonNull;
 
 import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import com.google.cloud.monitoring.v3.MetricServiceClient;
 import com.google.common.collect.Lists;
@@ -28,8 +30,17 @@ public final class GcpMetricClient implements AutoCloseable {
         this.metricServiceClient = metricServiceClient;
     }
 
-    public void sendMetric(CustomMetric metric) {
-        metricServiceClient.createTimeSeries(project, Lists.newArrayList(metric.timeSeries()));
+    public void send(CustomMetric metric) {
+        send(Lists.newArrayList(metric));
+    }
+
+    public void send(List<CustomMetric> metrics) {
+        metricServiceClient.createTimeSeries(project,
+                metrics.stream()
+                        .map(metric -> metric.timeSeries())
+                        .collect(Collectors.toList()
+                )
+        );
     }
 
     public static Builder projectId(String projectId) {
@@ -42,7 +53,7 @@ public final class GcpMetricClient implements AutoCloseable {
     }
 
     public static final class Builder {
-        final String projectId;
+        private final String projectId;
 
         private Builder(String projectId) {
             this.projectId = projectId;

@@ -30,17 +30,34 @@ public class GcpMetricClientTest {
     }
 
     @Test
-    public void assert_send_custom_metric_calls_client() {
-        CustomMetric metric = mock(CustomMetric.class);
-        when(metric.timeSeries()).thenReturn(TimeSeries.newBuilder().build());
+    public void assert_send_metric_calls_stub() {
+        CustomMetric metric = metric();
         MetricServiceStub mockStub = mock(MetricServiceStub.class, Answers.RETURNS_MOCKS);
         MetricServiceClient serviceClient = MetricServiceClient.create(mockStub);
         GcpMetricClient client = new GcpMetricClient(PROJECT_ID, serviceClient);
 
-        client.sendMetric(metric);
+        client.send(metric);
 
         verify(metric).timeSeries();
         verify(mockStub).createTimeSeriesCallable();
+    }
+
+    @Test
+    public void assert_service_client_closed_when_resource_released() {
+        MetricServiceStub mockStub = mock(MetricServiceStub.class);
+        MetricServiceClient serviceClient = MetricServiceClient.create(mockStub);
+
+        try(GcpMetricClient client = new GcpMetricClient(PROJECT_ID, serviceClient)) {
+            //noop
+        }
+
+        verify(mockStub).close();
+    }
+
+    private CustomMetric metric() {
+        CustomMetric metric = mock(CustomMetric.class);
+        when(metric.timeSeries()).thenReturn(TimeSeries.newBuilder().build());
+        return metric;
     }
 
 }
