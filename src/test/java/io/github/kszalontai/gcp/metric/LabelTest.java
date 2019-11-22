@@ -2,7 +2,11 @@ package io.github.kszalontai.gcp.metric;
 
 import static org.junit.Assert.*;
 
+import java.util.Map;
+
 import org.junit.Test;
+
+import com.google.common.collect.Lists;
 
 public class LabelTest {
 
@@ -30,6 +34,38 @@ public class LabelTest {
         assertNotNull(label);
         assertEquals(KEY, label.key());
         assertEquals(VALUE, label.value());
+    }
+
+    @Test
+    public void assert_asMap_returns_empty_map_when_called_with_null() {
+        Map<String, String> map = Label.asMap(null);
+
+        assertNotNull(map);
+        assertEquals(0, map.size());
+    }
+
+    @Test
+    public void assert_asMap_returns_empty_map_when_called_with_empty_list() {
+        Map<String, String> map = Label.asMap(Lists.newArrayList());
+
+        assertNotNull(map);
+        assertEquals(0, map.size());
+    }
+
+
+    @Test
+    public void assert_asMap_returns_key_value_entry() {
+        String key2 = "key2";
+        String value2 = "value2";
+        Map<String, String> map = Label.asMap(Lists.newArrayList(
+                Label.of(KEY, VALUE),
+                Label.of(key2, value2))
+        );
+
+        assertNotNull(map);
+        assertEquals(2, map.size());
+        assertEquals(VALUE, map.get(KEY));
+        assertEquals(value2, map.get(key2));
     }
 
 

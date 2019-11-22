@@ -2,6 +2,11 @@ package io.github.kszalontai.gcp.metric;
 
 import static java.util.Objects.requireNonNull;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 public final class Label {
 
     private final String key;
@@ -24,5 +29,12 @@ public final class Label {
 
     public String value() {
         return value;
+    }
+
+    public static Map<String, String> asMap(List<Label> labels) {
+        if (labels == null || labels.isEmpty()) {
+            return new HashMap<>();
+        }
+        return labels.stream().collect(Collectors.toMap(l -> l.key, l -> l.value));
     }
 }
